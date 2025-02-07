@@ -1,7 +1,11 @@
 package org.example;
 
 
+import com.google.gson.Gson;
+
+import java.io.*;
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -10,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
         // Créer le tableau
         char[][] tableau = new char[12][12];
+        // Créer la liste de tableaux
 
         // Ajouter des cellules selectionnées
         tableau[3][4] = 'X';
@@ -24,6 +29,9 @@ public class Main {
 
             // Attendre pour une touche
             scanner.nextLine();
+
+            // Enregistrer le tableau dans le fichier tableau.json
+            enregistrerTableau(tableau);
 
             // Calculer la génération suivante
             tableau = generationSuivante(tableau);
@@ -104,4 +112,34 @@ public class Main {
         return nombre;
 
     }
+
+    // Fonction qui enregistre l'état dans un fichier
+    private static void enregistrerTableau(char[][] tableau) {
+        // Créer la variable Gson
+        Gson gson = new Gson();
+        // Ajouter le tableau dans un string Json
+        String json = gson.toJson(tableau, char[][].class);
+        // Sérialiser le tableau
+        try {
+            FileWriter fw = new FileWriter("tableau.json");
+            fw.write(json);
+            fw.close();
+        }catch (IOException e){
+            System.out.println("Erreur à écrire dans le fichier");
+        }
+    }
+
+    // Fonction qui désérialise le fichier tableau.json afin d'afficher l'ancien tableau
+    private static char[][] deserialiserTableau() {
+        char[][] tableauDeserialise;
+        try {
+            Gson gson = new Gson();
+            BufferedReader br = new BufferedReader(new FileReader("tableau.json"));
+            tableauDeserialise = gson.fromJson(br, char[][].class);
+        } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+        return tableauDeserialise;
+    }
+
 }
