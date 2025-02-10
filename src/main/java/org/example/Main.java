@@ -14,12 +14,36 @@ public class Main {
     public static void main(String[] args) {
         // Créer le tableau
         char[][] tableau = new char[12][12];
-        // Créer la liste de tableaux
 
-        // Ajouter des cellules selectionnées
-        tableau[3][4] = 'X';
-        tableau[4][4] = 'X';
-        tableau[5][4] = 'X';
+        // Boucle s'il y a une erreur d'entrée
+        while (true) {
+            // Menu utilisateur
+            System.out.print("Bonjour et bienvenue à GameOfLife!\n" +
+                    "Choississez une des options suivantes : \n" +
+                    "1 - Poursuivre le pattern précédent.\n" +
+                    "2 - Commencer une nouvelle partie avec une forme GLIDER\n" +
+                    "3 - Commencer une nouvelle partie avec une forme de BARRES\n");
+            // Scanneur qui attends pour un choix de l'utilisateur
+            Scanner scan = new Scanner(System.in);
+            int numChoisi = scan.nextInt();
+            scan.nextLine();
+
+            // Selon le choix de l'utilisateur, on affiche le tableau spécifique
+            if (numChoisi == 1) {
+                tableau = deserialiserTableau("tableau.json");
+                break;
+            }else if (numChoisi == 2) {
+                tableau = deserialiserTableau("glider.json");
+                break;
+            }else if (numChoisi == 3) {
+                tableau = deserialiserTableau("barre.json");
+                break;
+            }else {
+                System.out.println("Le choix n'existe pas, réessayez!");
+            }
+        }
+
+
 
         // Créer un scanner pour la touche ENTER
         Scanner scanner = new Scanner(System.in);
@@ -38,8 +62,8 @@ public class Main {
 
         } while (true);
 
-
     }
+
     // Fonction qui affiche le tableau
     private static void afficherJeu(char[][] tableau) {
         for (int i = 1; i < 11; i++) {
@@ -129,12 +153,12 @@ public class Main {
         }
     }
 
-    // Fonction qui désérialise le fichier tableau.json afin d'afficher l'ancien tableau
-    private static char[][] deserialiserTableau() {
+    // Fonction qui désérialise le fichier .json selon le nom recu en paramètres
+    private static char[][] deserialiserTableau(String fichier) {
         char[][] tableauDeserialise;
         try {
             Gson gson = new Gson();
-            BufferedReader br = new BufferedReader(new FileReader("tableau.json"));
+            BufferedReader br = new BufferedReader(new FileReader(fichier));
             tableauDeserialise = gson.fromJson(br, char[][].class);
         } catch (IOException e) {
         throw new RuntimeException(e);
